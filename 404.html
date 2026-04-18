@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piedra, Papel o Tijera</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Tarjeta principal */
+        .card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        /* Título principal */
+        .main-title {
+            font-size: 2.2em;
+            font-weight: 800;
+            color: #2d3561;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Componente Ganaste/Resultado */
+        .result-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 60px;
+            padding: 20px 30px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .result-badge.win {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .result-badge.lose {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .result-badge.tie {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .result-text {
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+
+        .result-detail {
+            color: white;
+            font-size: 1em;
+            opacity: 0.95;
+        }
+
+        /* Botón Empezar */
+        .btn-start {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Topografía */
+        .typography {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .typography p {
+            color: #666;
+            font-size: 0.85em;
+            margin: 5px 0;
+        }
+
+        .typography a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .typography a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        /* Opciones del juego */
+        .options-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .option-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border: none;
+            padding: 25px;
+            font-size: 2.5em;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .option-label {
+            font-size: 0.5em;
+            margin-top: 10px;
+            color: #2d3561;
+            font-weight: 600;
+        }
+
+        /* Movimientos mostrados */
+        .moves-showcase {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .move-display {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .move-icon {
+            font-size: 3em;
+            margin: 10px 0;
+        }
+
+        /* Score */
+        .score-board {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Botones secundarios */
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 12px 24px;
+            font-size: 1em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Grid de botones */
+        .buttons-grid {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
